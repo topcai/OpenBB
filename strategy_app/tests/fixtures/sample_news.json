@@ -1,0 +1,102 @@
+[
+  {
+    "id": "mock-001",
+    "source": "cryptopanic",
+    "title": "Bitcoin breaks above $70,000 as US spot ETFs see record inflows",
+    "summary": "BlackRock and Fidelity spot ETFs absorbed over $1.2B in net inflows yesterday, pushing BTC to a fresh local high.",
+    "url": "https://example.com/news/btc-etf-inflows",
+    "published_at": "2026-05-08T07:30:00+00:00",
+    "raw_symbols": ["BTC"],
+    "image_url": null
+  },
+  {
+    "id": "mock-002",
+    "source": "cryptopanic",
+    "title": "Ethereum Pectra upgrade activates on mainnet, validators report smooth rollout",
+    "summary": "Pectra upgrade introduces account-abstraction primitives and larger blob counts. Gas fees expected to drop ~15%.",
+    "url": "https://example.com/news/eth-pectra",
+    "published_at": "2026-05-08T06:15:00+00:00",
+    "raw_symbols": ["ETH"],
+    "image_url": null
+  },
+  {
+    "id": "mock-003",
+    "source": "fmp",
+    "title": "NVIDIA beats Q1 earnings, raises full-year guidance on AI demand",
+    "summary": "NVDA reported $30B revenue vs $28B est. Data-center segment grew 78% YoY. Stock up 6% in after-hours.",
+    "url": "https://example.com/news/nvda-earnings",
+    "published_at": "2026-05-08T05:45:00+00:00",
+    "raw_symbols": ["NVDA"],
+    "image_url": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600"
+  },
+  {
+    "id": "mock-004",
+    "source": "fmp",
+    "title": "Fed minutes signal rate cuts may be delayed amid sticky core inflation",
+    "summary": "FOMC members express concern that services-inflation remains above 4%, dampening near-term cut expectations. DXY rallies.",
+    "url": "https://example.com/news/fed-minutes",
+    "published_at": "2026-05-08T04:00:00+00:00",
+    "raw_symbols": [],
+    "image_url": null
+  },
+  {
+    "id": "mock-005",
+    "source": "fmp",
+    "title": "Gold hits all-time high above $2,500 as geopolitical tensions escalate",
+    "summary": "Middle East tensions and central-bank buying drive XAU to a new record. Silver follows with a 3% pop.",
+    "url": "https://example.com/news/gold-ath",
+    "published_at": "2026-05-08T03:20:00+00:00",
+    "raw_symbols": ["GLD"],
+    "image_url": null
+  },
+  {
+    "id": "mock-006",
+    "source": "fmp",
+    "title": "Apple unveils on-device AI strategy at WWDC, partners with OpenAI",
+    "summary": "AAPL announces 'Apple Intelligence' for iOS 19 with deep ChatGPT integration. Analysts view as catalyst for upgrade cycle.",
+    "url": "https://example.com/news/aapl-wwdc",
+    "published_at": "2026-05-08T02:10:00+00:00",
+    "raw_symbols": ["AAPL"],
+    "image_url": "https://images.unsplash.com/photo-1585399000684-d2f72660f092?w=600"
+  },
+  {
+    "id": "mock-007",
+    "source": "cryptopanic",
+    "title": "Solana network outage resolved after 4-hour halt; SOL drops 8%",
+    "summary": "Validator client bug caused mainnet to stall. Patch deployed; chain back online but sentiment damaged.",
+    "url": "https://example.com/news/sol-outage",
+    "published_at": "2026-05-08T01:00:00+00:00",
+    "raw_symbols": ["SOL"],
+    "image_url": null
+  },
+  {
+    "id": "mock-008",
+    "source": "fmp",
+    "title": "WTI crude tumbles below $70 after OPEC+ signals output increase",
+    "summary": "Saudi-led group says they will gradually unwind voluntary cuts starting Q3. WTI -3.5% on the news.",
+    "url": "https://example.com/news/wti-opec",
+    "published_at": "2026-05-08T00:30:00+00:00",
+    "raw_symbols": [],
+    "image_url": null
+  },
+  {
+    "id": "mock-009",
+    "source": "fmp",
+    "title": "EUR/USD breaks 1.10 as ECB hints at faster cuts than Fed",
+    "summary": "Lagarde's dovish comments pushed euro to a 3-month low against USD. Diverging policy paths now firmly in focus.",
+    "url": "https://example.com/news/eurusd-ecb",
+    "published_at": "2026-05-07T23:00:00+00:00",
+    "raw_symbols": [],
+    "image_url": null
+  },
+  {
+    "id": "mock-010",
+    "source": "cryptopanic",
+    "title": "SEC drops appeal in Ripple case, XRP surges 25%",
+    "summary": "Long-running legal battle ends. XRP holders cheer regulatory clarity; trading volume spikes 5x.",
+    "url": "https://example.com/news/xrp-sec",
+    "published_at": "2026-05-07T22:00:00+00:00",
+    "raw_symbols": ["XRP"],
+    "image_url": null
+  }
+]
