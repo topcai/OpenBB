@@ -142,7 +142,7 @@ with st.sidebar:
         format_func=lambda x: f"{ASSET_EMOJI[x]} {ASSET_LABEL_ZH[x]}",
     )
     only_with_strategy = st.toggle("只看带策略的卡片", value=False)
-    limit = st.slider("拉取数量", min_value=3, max_value=30, value=5, step=1)
+    limit = st.slider("拉取数量", min_value=5, max_value=30, value=12, step=1)
 
     st.divider()
 
