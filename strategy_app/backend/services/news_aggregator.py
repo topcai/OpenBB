@@ -24,6 +24,7 @@ from rapidfuzz import fuzz
 from strategy_app.backend.config import get_settings
 from strategy_app.backend.schemas import NewsItem
 from strategy_app.backend.services.cryptopanic_client import fetch_cryptopanic_posts
+from strategy_app.backend.services.fmp_client import fetch_fmp_news
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +57,9 @@ async def fetch_recent(limit: int = 50) -> list[NewsItem]:
             ))
 
         if settings.has_fmp:
-            tasks.append(asyncio.create_task(_fetch_openbb_world_news(limit=limit)))
+            tasks.append(asyncio.create_task(
+                fetch_fmp_news(settings.fmp_api_key, limit=limit),
+            ))
 
         if not tasks:
             logger.warning(

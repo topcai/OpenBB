@@ -6,6 +6,7 @@ import asyncio
 import logging
 from typing import Optional
 
+from strategy_app.backend.config import get_settings
 from strategy_app.backend.schemas import FeedCard, NewsItem, Strategy
 from strategy_app.backend.services import (
     asset_extractor,
@@ -17,6 +18,16 @@ from strategy_app.backend.services import (
 from strategy_app.backend.storage import cache
 
 logger = logging.getLogger(__name__)
+
+# Global semaphore so concurrent /feed requests share the same cap.
+_LLM_SEMAPHORE: asyncio.Semaphore | None = None
+
+
+def _llm_semaphore() -> asyncio.Semaphore:
+    global _LLM_SEMAPHORE
+    if _LLM_SEMAPHORE is None:
+        _LLM_SEMAPHORE = asyncio.Semaphore(get_settings().llm_max_concurrency)
+    return _LLM_SEMAPHORE
 
 
 # ---------------------------------------------------------------------------
@@ -84,12 +95,15 @@ async def _build_one(news: NewsItem) -> FeedCard:
     strategies: list[Strategy] = []
 
     # Build per-asset strategies in parallel.
+    sem = _llm_semaphore()
+
     async def _per_asset(asset) -> Optional[Strategy]:
         snap = await market_data.get_market_snapshot(asset)
         if snap is None:
             logger.debug("No snapshot for %s, skipping", asset.symbol)
             return None
-        advice = await llm_strategist.advise(news, asset, snap)
+        async with sem:  # cap concurrent LLM calls
+            advice = await llm_strategist.advise(news, asset, snap)
         if advice is None:
             return None
         return risk_engine.build_strategy(

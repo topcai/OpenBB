@@ -112,6 +112,15 @@ async def extract(news: NewsItem, max_assets: int = 3) -> list[ExtractedAsset]:
         entry = _BY_RAW_SYMBOL.get(sym_u)
         if entry:
             found[entry.display] = _to_asset(entry, confidence=1.0)
+        elif _looks_like_us_ticker(sym_u):
+            # Generic fallback: treat clean US-style tickers as STOCK and
+            # let yfinance try to resolve them.
+            found[sym_u] = ExtractedAsset(
+                symbol=sym_u,
+                asset_type="STOCK",
+                yfinance_symbol=sym_u,
+                confidence=0.95,
+            )
 
     # 2. Substring scan against title + summary.
     if len(found) < max_assets:
@@ -138,9 +147,14 @@ async def extract(news: NewsItem, max_assets: int = 3) -> list[ExtractedAsset]:
     if found:
         return list(found.values())[:max_assets]
 
-    # 3. LLM fallback — only if a key is configured.
+    # 3. LLM fallback — gated behind a config flag. Off by default in live
+    # mode because each call can be slow on cloud LLM endpoints.
     settings = get_settings()
-    if settings.has_llm and not settings.use_mock:
+    if (
+        settings.has_llm
+        and not settings.use_mock
+        and settings.llm_extract_fallback
+    ):
         return await _llm_extract(news, max_assets=max_assets)
 
     return []
@@ -149,6 +163,14 @@ async def extract(news: NewsItem, max_assets: int = 3) -> list[ExtractedAsset]:
 # ---------------------------------------------------------------------------
 # Internals
 # ---------------------------------------------------------------------------
+
+_US_TICKER_RE = re.compile(r"^[A-Z]{1,5}(?:\.[A-Z])?$")
+
+
+def _looks_like_us_ticker(s: str) -> bool:
+    """Heuristic: 1-5 capital letters, optional .X suffix (e.g. BRK.B)."""
+    return bool(s and _US_TICKER_RE.fullmatch(s))
+
 
 def _to_asset(entry: _AssetEntry, confidence: float) -> ExtractedAsset:
     return ExtractedAsset(
@@ -196,6 +218,7 @@ async def _llm_extract(news: NewsItem, max_assets: int) -> list[ExtractedAsset]:
     client = AsyncOpenAI(
         api_key=settings.openai_api_key,
         base_url=settings.openai_base_url or None,
+        timeout=settings.llm_timeout_seconds,
     )
 
     catalogue_str = "\n".join(f"- {e.display} ({e.asset_type})" for e in _CATALOGUE)

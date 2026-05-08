@@ -133,6 +133,7 @@ async def _llm_advice(
     client = AsyncOpenAI(
         api_key=settings.openai_api_key,
         base_url=settings.openai_base_url or None,
+        timeout=settings.llm_timeout_seconds,
     )
 
     prompt = _load_prompt().format(
@@ -145,19 +146,58 @@ async def _llm_advice(
         atr=snapshot.atr,
     )
 
-    try:
-        resp = await client.chat.completions.create(
+    # Try with native JSON mode first, fall back to plain text if the
+    # endpoint rejects `response_format` (some self-hosted / proxy endpoints
+    # don't implement it).
+    content: Optional[str] = None
+    for use_json_mode in (True, False):
+        kwargs: dict = dict(
             model=settings.llm_model,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
-            response_format={"type": "json_object"},
         )
-        content = resp.choices[0].message.content or "{}"
-        data = json.loads(content)
+        if use_json_mode:
+            kwargs["response_format"] = {"type": "json_object"}
+        try:
+            resp = await client.chat.completions.create(**kwargs)
+            content = (resp.choices[0].message.content or "").strip()
+            break
+        except Exception as e:  # noqa: BLE001
+            if use_json_mode:
+                logger.info(
+                    "LLM endpoint rejected json_object mode (%s); retrying as text",
+                    e,
+                )
+                continue
+            logger.warning("LLM strategist failed for %s: %s", asset.symbol, e)
+            return None
+
+    if not content:
+        return None
+
+    try:
+        data = json.loads(_strip_code_fence(content))
         return LLMStrategyAdvice.model_validate(data)
     except Exception as e:  # noqa: BLE001
-        logger.warning("LLM strategist failed for %s: %s", asset.symbol, e)
+        logger.warning(
+            "LLM output not parseable for %s: %s. Raw=%r",
+            asset.symbol, e, content[:200],
+        )
         return None
+
+
+def _strip_code_fence(s: str) -> str:
+    """Strip ```json ... ``` or ``` ... ``` wrappers some models add."""
+    s = s.strip()
+    if s.startswith("```"):
+        # Drop the opening fence line and the trailing fence.
+        lines = s.splitlines()
+        if lines:
+            lines = lines[1:]
+        if lines and lines[-1].strip().startswith("```"):
+            lines = lines[:-1]
+        s = "\n".join(lines).strip()
+    return s
 
 
 def _load_prompt() -> str:

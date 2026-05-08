@@ -33,6 +33,14 @@ class Settings(BaseSettings):
     use_mock: bool = Field(default=True)
     cache_ttl_minutes: int = Field(default=360)
     default_feed_limit: int = Field(default=20)
+    # Per-call timeout for the LLM (some endpoints — e.g. glm-5.1:cloud via
+    # ollama.com — can be very slow; this prevents hanging the whole feed).
+    llm_timeout_seconds: float = Field(default=60.0)
+    # Whether to use LLM as a fallback for asset extraction when rules find
+    # nothing. Disabled by default in live mode to keep refresh latency low.
+    llm_extract_fallback: bool = Field(default=False)
+    # Hard cap on concurrent LLM strategy calls per refresh.
+    llm_max_concurrency: int = Field(default=3)
 
     # ---- Server ----
     backend_host: str = Field(default="127.0.0.1")
