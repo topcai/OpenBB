@@ -162,9 +162,15 @@ with st.sidebar:
         mode = "MOCK" if h.get("use_mock") else "LIVE"
         st.caption(f"后端：{BACKEND_URL}")
         st.caption(
-            f"模式: **{mode}**  ·  LLM: {'✅' if h.get('has_llm') else '❌'}  "
-            f"·  FMP: {'✅' if h.get('has_fmp') else '❌'}  "
-            f"·  CryptoPanic: {'✅' if h.get('has_cryptopanic') else '❌'}"
+            f"模式: **{mode}**  ·  LLM: {'✅' if h.get('has_llm') else '❌'}"
+        )
+        st.caption(
+            "新闻源: "
+            f"YF{'✅' if h.get('has_yfinance') else '❌'} · "
+            f"FMP{'✅' if h.get('has_fmp') else '❌'} · "
+            f"Tiingo{'✅' if h.get('has_tiingo') else '❌'} · "
+            f"Biztoc{'✅' if h.get('has_biztoc') else '❌'} · "
+            f"CryptoPanic{'✅' if h.get('has_cryptopanic') else '❌'}"
         )
     except Exception:
         st.caption(f"❌ 无法连接后端 {BACKEND_URL}")

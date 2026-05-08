@@ -23,8 +23,10 @@ from rapidfuzz import fuzz
 
 from strategy_app.backend.config import get_settings
 from strategy_app.backend.schemas import NewsItem
+from strategy_app.backend.services.biztoc_client import fetch_biztoc_news
 from strategy_app.backend.services.cryptopanic_client import fetch_cryptopanic_posts
 from strategy_app.backend.services.fmp_client import fetch_fmp_news
+from strategy_app.backend.services.tiingo_client import fetch_tiingo_news
 from strategy_app.backend.services.yfinance_news import fetch_yfinance_news
 
 logger = logging.getLogger(__name__)
@@ -60,6 +62,16 @@ async def fetch_recent(limit: int = 50) -> list[NewsItem]:
         if settings.has_fmp:
             tasks.append(asyncio.create_task(
                 fetch_fmp_news(settings.fmp_api_key, limit=limit),
+            ))
+
+        if settings.has_tiingo:
+            tasks.append(asyncio.create_task(
+                fetch_tiingo_news(settings.tiingo_token, limit=limit),
+            ))
+
+        if settings.has_biztoc:
+            tasks.append(asyncio.create_task(
+                fetch_biztoc_news(settings.biztoc_rapidapi_key, limit=limit),
             ))
 
         # Yahoo Finance news is free + truly real-time (minutes-level

@@ -72,7 +72,11 @@ async def healthz() -> dict:
         "use_mock": settings.use_mock,
         "has_llm": settings.has_llm,
         "has_fmp": settings.has_fmp,
+        "has_tiingo": settings.has_tiingo,
+        "has_biztoc": settings.has_biztoc,
         "has_cryptopanic": settings.has_cryptopanic,
+        # yfinance is always on (free, no key)
+        "has_yfinance": True,
     }
 
 

@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     # ---- News providers ----
     fmp_api_key: str = Field(default="")
     cryptopanic_auth_token: str = Field(default="")
+    tiingo_token: str = Field(default="")
+    biztoc_rapidapi_key: str = Field(default="")
 
     # ---- Behaviour ----
     use_mock: bool = Field(default=True)
@@ -65,6 +67,14 @@ class Settings(BaseSettings):
     @property
     def has_cryptopanic(self) -> bool:
         return bool(self.cryptopanic_auth_token)
+
+    @property
+    def has_tiingo(self) -> bool:
+        return bool(self.tiingo_token)
+
+    @property
+    def has_biztoc(self) -> bool:
+        return bool(self.biztoc_rapidapi_key)
 
 
 @lru_cache(maxsize=1)
