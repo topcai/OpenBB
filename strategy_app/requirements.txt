@@ -28,6 +28,9 @@ rapidfuzz>=3.9
 # only to avoid bringing in heavy deps for the demo. Keep this comment as
 # documentation; nothing extra to install.
 
+# ---- Market data (free, no key) ----
+yfinance>=0.2.40
+
 # ---- Numeric (already pulled in by openbb but pinning loose minimum) ----
 pandas>=2.0
 numpy>=1.24
