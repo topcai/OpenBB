@@ -1,0 +1,6 @@
+# Strategy App-specific ignores
+strategy_app/.env
+strategy_app/backend/storage/cache.sqlite
+strategy_app/backend/storage/cache.sqlite-journal
+__pycache__/
+*.pyc
